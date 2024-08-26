@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Rutinas Deportivas</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #000000, #3e3e3e, #808080, #b3b3b3, #ffd700);
+            background-size: 600% 600%;
+            animation: gradientBackground 12s ease infinite;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #ffd700;
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+            width: 700px;
+            margin: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        select, input[type="text"], input[type="number"], button {
+            width: 100%;
+            padding: 20px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 18px;
+        }
+
+        select {
+            background-color: #000000;
+            color: #ffd700;
+            height: 60px;
+        }
+
+        button {
+            background-color: #ffd700;
+            color: #000000;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        button:hover {
+            background-color: #ccac00;
+        }
+
+        .option {
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            background-color: #000000;
+            color: #ffd700;
+        }
+
+        .option:hover {
+            background-color: #333333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            color: #ffd700;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ffd700;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="registerSection" class="section active">
+            <h1>Regístrate</h1>
+            <form onsubmit="event.preventDefault(); registerUser();">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="apellido" placeholder="Apellido" required>
+                <input type="number" id="edad" placeholder="Edad" required>
+                <button type="submit">Registrarse</button>
+            </form>
+        </div>
+        <div id="optionsSection" class="section">
+            <div class="welcome" id="welcomeMessage"></div>
+            <div class="option" onclick="showContent('exercise')">Adquirir Rutinas</div>
+            <div class="option" onclick="showContent('diet')">Adquirir Dietas</div>
+            <div class="option" onclick="showContent('habits')">Adoptar Hábitos Saludables</div>
+        </div>
+        <div id="exerciseSection" class="section">
+            <select id="bodyPart" onchange="showExercises();">
+                <option value="">Selecciona la parte del cuerpo</option>
+                <option value="brazos">Brazos</option>
+                <option value="piernas">Piernas</option>
+                <option value="abdominales">Abdominales</option>
+                <option value="espalda">Espalda</option>
+                <option value="pecho">Pecho</option>
+            </select>
+            <ul id="exerciseList"></ul>
+        </div>
+        <div id="dietSection" class="section">
+            <h2>Elige tu objetivo dietético</h2>
+            <select id="dietGoal" onchange="showDietDetails();">
+                <option value="">Selecciona tu objetivo</option>
+                <option value="deficitCalorico">Déficit Calórico</option>
+                <option value="aumentoMuscular">Aumento de Masa Muscular</option>
+                <option value="perdidaPeso">Pérdida de Peso</option>
+                <option value="dietaBalanceada">Dieta Balanceada</option>
+                <option value="dietaKeto">Dieta Keto</option>
+            </select>
+            <div id="dietDetails"></div>
+        </div>
+    </div>
+    <script>
+        function registerUser() {
+            var nombre = document.getElementById('nombre').value;
+            var apellido = document.getElementById('apellido').value;
+            if (nombre && apellido) {
+                var welcomeMsg = `Hola ${nombre} ${apellido}! Elige una opción para comenzar:`;
+                document.getElementById('welcomeMessage').innerHTML = welcomeMsg;
+                document.getElementById('registerSection').classList.remove('active');
+                document.getElementById('optionsSection').classList.add('active');
+            } else {
+                alert("Por favor, completa todos los campos.");
+            }
+        }
+
+        function showContent(section) {
+            document.getElementById('optionsSection').classList.remove('active');
+            document.getElementById(section + 'Section').classList.add('active');
+        }
+
+        function showExercises() {
+            var bodyPart = document.getElementById('bodyPart').value;
+            var exerciseList = document.getElementById('exerciseList');
+            exerciseList.innerHTML = ''; // Clear previous list
+
+            var exercises = {
+                brazos: [
+                    "Curl de bíceps", "Curl de bíceps con barra", "Curl de bíceps con mancuerna", "Curl martillo", 
+                    "Curl concentrado", "Extensión de tríceps en polea alta", "Extensión de tríceps por detrás de la cabeza", 
+                    "Flexiones de brazo cerradas", "Dips en paralelas", "Press de banca cerrado", "Patada de tríceps", 
+                    "Press francés", "Curl de bíceps alterno inclinado", "Curl de muñeca", "Flexiones de brazo Spiderman", 
+                    "Curl con barra Z", "Flexiones diamante", "Fondos en banco", "Tríceps en polea con cuerda", 
+                    "Curl spider", "Curl en predicador"
+                ],
+                piernas: [
+                    "Sentadillas", "Prensa de piernas", "Zancadas", "Extensiones de cuádriceps", "Curl de piernas", 
+                    "Peso muerto rumano", "Sentadilla búlgara", "Desplantes", "Peso muerto con pierna recta", 
+                    "Saltos en caja", "Elevaciones de talón en máquina", "Abductores", "Adductores", "Puentes de glúteo", 
+                    "Sentadilla sumo", "Elevación de talones sentado", "Hack squat", "Leg curl en máquina", 
+                    "Leg press", "Sentadilla en máquina Smith"
+                ],
+                abdominales: [
+                    "Crunches", "Elevaciones de piernas", "Plancha", "Russian twists", "Bicicletas", "Tijeras", 
+                    "Levantamientos de piernas colgantes", "Mountain climbers", "Plancha con elevación de pierna", 
+                    "Toques al talón", "Crunches oblicuos", "Plancha lateral", "Crunch inverso", "Giros rusos con peso", 
+                    "Rodillo abdominal", "Plancha con codos", "V-ups", "Crunch de bicicleta", "Crunch en máquina", 
+                    "Elevación de rodillas en paralelas"
+                ],
+                espalda: [
+                    "Pulldowns", "Remo con barra", "Peso muerto", "Superman", "Pull-ups", "Remo en máquina", 
+                    "Remo con mancuerna", "Chin-ups", "Remo en polea baja", "Pullover con mancuerna", 
+                    "Remo horizontal con cable", "Good mornings", "Hyperextensions", "Pullover con cable", 
+                    "Remo T-Bar", "Pull-ups con agarre ancho", "Remo con barra en T", "Peso muerto sumo", 
+                    "Remo en máquina Hammer", "Encogimientos de hombros"
+                ],
+                pecho: [
+                    "Press de banca", "Aperturas con mancuernas", "Pullover", "Flexiones", "Flyes inclinado", 
+                    "Press de banca inclinado", "Press de banca declinado", "Cruces en polea", "Push-ups", 
+                    "Press de máquina", "Flyes declinado", "Svend press", "Press de banca con agarre cerrado", 
+                    "Dips de pecho", "Flexiones con palmada", "Flexiones en anillos", "Press de pecho en máquina Hammer", 
+                    "Press de banca con mancuernas", "Press en máquina Smith", "Flexiones pike"
+                ]
+            };
+
+            if (bodyPart in exercises) {
+                exercises[bodyPart].forEach(function(exercise) {
+                    var li = document.createElement('li');
+                    li.textContent = exercise;
+                    exerciseList.appendChild(li);
+                });
+            }
+        }
+
+        function showDietDetails() {
+            var dietGoal = document.getElementById('dietGoal').value;
+            var dietDetails = document.getElementById('dietDetails');
+            var diets = {
+                deficitCalorico: {
+                    description: "Una dieta de déficit calórico implica reducir la cantidad de calorías consumidas para promover la pérdida de peso.",
+                    meals: [
+                        "Ensalada de espinacas con pollo a la parrilla",
+                        "Batido de bayas y yogur griego",
+                        "Sopa de verduras casera",
+                        "Pechuga de pavo con vegetales al vapor",
+                        "Salmón a la parrilla con espárragos",
+                        "Wrap de lechuga con atún",
+                        "Tacos de pescado con salsa de mango",
+                        "Ensalada de quinoa y aguacate",
+                        "Sopa de calabaza y zanahoria",
+                        "Batido de proteínas con espinacas y plátano"
+                    ]
+                },
+                aumentoMuscular: {
+                    description: "Una dieta para aumento muscular incluye un mayor consumo de proteínas y calorías para apoyar el crecimiento muscular.",
+                    meals: [
+                        "Batido de proteínas con avena y plátano",
+                        "Pechuga de pollo con arroz integral y brócoli",
+                        "Carne de res magra con patatas dulces",
+                        "Huevos revueltos con espinacas y queso feta",
+                        "Lasaña de carne con ricotta",
+                        "Sándwich de pavo con aguacate",
+                        "Tacos de pollo con tortillas integrales",
+                        "Smoothie de proteínas con mantequilla de almendras",
+                        "Hamburguesa de ternera con batata al horno",
+                        "Ensalada Cobb con pollo y huevos"
+                    ]
+                },
+                perdidaPeso: {
+                    description: "Una dieta para pérdida de peso se enfoca en alimentos bajos en calorías y altos en nutrientes para facilitar una pérdida de peso saludable.",
+                    meals: [
+                        "Sopa de tomate y albahaca",
+                        "Ensalada de atún con garbanzos",
+                        "Pechuga de pollo a la plancha con espárragos",
+                        "Veggie stir-fry con tofu",
+                        "Pavo al horno con calabacín",
+                        "Smoothie de frutas con semillas de chía",
+                        "Poke bowl de salmón con arroz de coliflor",
+                        "Wrap de pollo con lechuga y hummus",
+                        "Gazpacho de pepino y tomate",
+                        "Ceviche de camarón con aguacate"
+                    ]
+                },
+                dietaBalanceada: {
+                    description: "Una dieta balanceada incluye una variedad de alimentos para asegurar una nutrición completa y balanceada.",
+                    meals: [
+                        "Ensalada mediterránea con garbanzos",
+                        "Pollo al curry con arroz basmati",
+                        "Bowl de yogurt con granola y frutas",
+                        "Estofado de ternera con patatas",
+                        "Pasta integral con salsa de tomate y albóndigas",
+                        "Curry de garbanzos con arroz integral",
+                        "Fajitas de pollo con pimientos",
+                        "Salmón al horno con puré de patatas",
+                        "Paella de mariscos",
+                        "Tostadas de aguacate con huevos pochados"
+                    ]
+                },
+                dietaKeto: {
+                    description: "La dieta keto es alta en grasas y muy baja en carbohidratos, lo que fomenta un estado de cetosis donde el cuerpo quema grasa como energía principal.",
+                    meals: [
+                        "Huevos revueltos con tocino",
+                        "Aguacate relleno de ensalada de atún",
+                        "Pollo en crema de espinacas",
+                        "Ensalada Caprese con mozzarella fresca",
+                        "Albóndigas suecas con salsa de crema",
+                        "Pizza keto con base de coliflor",
+                        "Chuletas de cerdo con puré de coliflor",
+                        "Salmón al horno con salsa de mantequilla",
+                        "Tacos de lechuga con carne picante",
+                        "Cheesecake keto sin azúcar"
+                    ]
+                }
+            };
+
+            var selectedDiet = diets[dietGoal];
+            if (selectedDiet) {
+                dietDetails.innerHTML = `<h3>${selectedDiet.description}</h3><h4>Comidas recomendadas:</h4><ul>${selectedDiet.meals.map(meal => `<li>${meal}</li>`).join('')}</ul>`;
+            } else {
+                dietDetails.innerHTML = "Por favor, selecciona una opción válida.";
+            }
+        }
+    </script>
+</body>
+</html>
